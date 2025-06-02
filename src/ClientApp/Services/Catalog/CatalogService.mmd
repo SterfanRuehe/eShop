@@ -1,0 +1,12 @@
+```mermaid
+flowchart TD
+    A[Client] -->|ruft auf| B[CatalogService]
+    B -->|FilterAsync| C[RequestProvider: GetAsync<CatalogRoot>]
+    C --> D[FixUriService: FixCatalogItemPictureUri]
+    B -->|GetCatalogAsync| E[RequestProvider: GetAsync<CatalogRoot>]
+    E --> F[FixUriService: FixCatalogItemPictureUri]
+    B -->|GetCatalogItemAsync| G[RequestProvider: GetAsync<CatalogItem>]
+    G --> H[FixUriService: FixCatalogItemPictureUri]
+    B -->|GetCatalogBrandAsync| I[RequestProvider: GetAsync<IEnumerable<CatalogBrand>>]
+    B -->|GetCatalogTypeAsync| J[RequestProvider: GetAsync<IEnumerable<CatalogType>>]
+```
