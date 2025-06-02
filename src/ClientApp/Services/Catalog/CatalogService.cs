@@ -6,6 +6,9 @@ using eShop.ClientApp.Services.Settings;
 
 namespace eShop.ClientApp.Services.Catalog;
 
+/// <summary>
+/// Service für den Zugriff auf Katalogdaten.
+/// </summary>
 public class CatalogService : ICatalogService
 {
     private const string ApiUrlBase = "api/catalog";
@@ -15,6 +18,12 @@ public class CatalogService : ICatalogService
     private readonly IRequestProvider _requestProvider;
     private readonly ISettingsService _settingsService;
 
+    /// <summary>
+    /// Erstellt eine neue Instanz des <see cref="CatalogService"/>.
+    /// </summary>
+    /// <param name="settingsService">Service für Anwendungseinstellungen.</param>
+    /// <param name="requestProvider">Provider für HTTP-Anfragen.</param>
+    /// <param name="fixUriService">Service zum Korrigieren von Bild-URIs.</param>
     public CatalogService(ISettingsService settingsService, IRequestProvider requestProvider,
         IFixUriService fixUriService)
     {
@@ -23,6 +32,12 @@ public class CatalogService : ICatalogService
         _fixUriService = fixUriService;
     }
 
+    /// <summary>
+    /// Filtert Katalogartikel nach Marke und Typ.
+    /// </summary>
+    /// <param name="catalogBrandId">ID der Marke.</param>
+    /// <param name="catalogTypeId">ID des Typs.</param>
+    /// <returns>Gefilterte Liste von <see cref="CatalogItem"/>.</returns>
     public async Task<IEnumerable<CatalogItem>> FilterAsync(int catalogBrandId, int catalogTypeId)
     {
         var uri = UriHelper.CombineUri(_settingsService.GatewayCatalogEndpointBase,
@@ -33,6 +48,10 @@ public class CatalogService : ICatalogService
         return catalog?.Data ?? Enumerable.Empty<CatalogItem>();
     }
 
+    /// <summary>
+    /// Ruft alle Katalogartikel ab.
+    /// </summary>
+    /// <returns>Liste von <see cref="CatalogItem"/>.</returns>
     public async Task<IEnumerable<CatalogItem>> GetCatalogAsync()
     {
         var uri = UriHelper.CombineUri(_settingsService.GatewayCatalogEndpointBase, $"{ApiUrlBase}/items?PageSize=100&{ApiVersion}");
@@ -48,6 +67,11 @@ public class CatalogService : ICatalogService
         return Enumerable.Empty<CatalogItem>();
     }
 
+    /// <summary>
+    /// Ruft einen bestimmten Katalogartikel anhand der ID ab.
+    /// </summary>
+    /// <param name="catalogItemId">ID des Katalogartikels.</param>
+    /// <returns>Der <see cref="CatalogItem"/> oder null.</returns>
     public async Task<CatalogItem> GetCatalogItemAsync(int catalogItemId)
     {
         var uri = UriHelper.CombineUri(_settingsService.GatewayCatalogEndpointBase,
@@ -64,6 +88,10 @@ public class CatalogService : ICatalogService
         return default;
     }
 
+    /// <summary>
+    /// Ruft alle verfügbaren Marken ab.
+    /// </summary>
+    /// <returns>Liste von <see cref="CatalogBrand"/>.</returns>
     public async Task<IEnumerable<CatalogBrand>> GetCatalogBrandAsync()
     {
         var uri = UriHelper.CombineUri(_settingsService.GatewayCatalogEndpointBase, $"{ApiUrlBase}/catalogbrands?{ApiVersion}");
@@ -73,6 +101,10 @@ public class CatalogService : ICatalogService
         return brands?.ToArray() ?? Enumerable.Empty<CatalogBrand>();
     }
 
+    /// <summary>
+    /// Ruft alle verfügbaren Typen ab.
+    /// </summary>
+    /// <returns>Liste von <see cref="CatalogType"/>.</returns>
     public async Task<IEnumerable<CatalogType>> GetCatalogTypeAsync()
     {
         var uri = UriHelper.CombineUri(_settingsService.GatewayCatalogEndpointBase, $"{ApiUrlBase}/catalogtypes?{ApiVersion}");
